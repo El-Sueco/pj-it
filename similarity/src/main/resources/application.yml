@@ -1,7 +1,7 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
   datasource:
     url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/similarity_db
     username: root
