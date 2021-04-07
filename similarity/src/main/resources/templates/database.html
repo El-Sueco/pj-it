@@ -1,5 +1,6 @@
-<!doctype html>
-<html lang="de">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -91,32 +92,13 @@
         <table id="models" class="table table-striped table-bordered table-sm">
           <thead>
             <tr>
-              <th>Bezeichnung</th>
-              <th>Filename</th>
-              <th>Prozessmodellart</th>
-              <th>Abteilung</th>
+              <th>id</th>
+              <th>name</th>
+              <th>file_name</th>
+              <th>type</th>
+              <th>department</th>
             </tr>
-          </thead>  
-          <tbody>
-            <tr>
-              <td>Zeichnung1</td>
-              <td>asgsdg.xml</td>
-              <td>BPMN</td>
-              <td>Einkauf</td>
-          </tr>
-          <tr>
-              <td>Zeichnung2</td>
-              <td>filename.xml</td>
-              <td>BPMN</td>
-              <td>Verkauf</td>
-          </tr>
-          <tr>
-              <td>Zeichnung3</td>
-              <td>flowchart24.xml</td>
-              <td>Flussdiagramm</td>
-              <td>Einkauf</td>
-          </tr>   
-          </tbody>         
+          </thead>
         </table>
     </div>
     <hr>
@@ -131,15 +113,18 @@
     </script>
     
     <script>
-      $(document).ready(function () {
-        $('#models').DataTable({
-          language: {
-            paginate: {
-              next: '&#8594;',
-              previous: '&#8592;'
-            } 
-          }
-        });
+      $(document).ready( function () {
+        var table = $('#models').DataTable({
+          "sAjaxSource": "/files/all",
+          "sAjaxDataProp": "",
+          "aoColumns": [
+            { "mData": "id"},
+            { "mData": "name" },
+            { "mData": "fileName" },
+            { "mData": "type.name" },
+            { "mData": "department.name" }
+          ]
+        })
       });
     </script>
 

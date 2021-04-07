@@ -4,7 +4,6 @@ import com.project.similarity.db.entity.File;
 import com.project.similarity.db.repository.FileRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -17,9 +16,11 @@ public class FileService {
     }
 
     public List<File> getAll() {
-        List<File> list = new ArrayList<>();
-        fileRepository.findAll().forEach(list::add);
-        return list;
+        return fileRepository.findAll();
+    }
+
+    public File getById(Long id) {
+        return fileRepository.findById(id).get();
     }
 
     public File save(File file){
