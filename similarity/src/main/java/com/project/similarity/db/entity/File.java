@@ -20,6 +20,9 @@ public class File {
     @Column(name = "file_name")
     private String fileName;
 
+    @Column(name = "content", columnDefinition = "text")
+    private String content;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="type_id")
     private Type type;

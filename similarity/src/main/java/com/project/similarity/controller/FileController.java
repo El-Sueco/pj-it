@@ -1,20 +1,17 @@
 package com.project.similarity.controller;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import com.project.similarity.db.entity.Department;
 import com.project.similarity.db.entity.File;
-import com.project.similarity.db.service.DepartmentService;
 import com.project.similarity.db.service.FileService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.text.similarity.FuzzyScore;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
-import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Locale;
 
@@ -32,10 +29,10 @@ public class FileController {
         return new ResponseEntity<>(types, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/test-lib", method = RequestMethod.GET)
-    public ResponseEntity<Integer> test(){
+    @RequestMapping(value = "/test-lib/{id1}/{id2}", method = RequestMethod.GET)
+    public ResponseEntity<Integer> test(@PathVariable Long id1, @PathVariable Long id2){
         FuzzyScore score = new FuzzyScore(Locale.GERMAN);
-        Integer scoreInt = score.fuzzyScore("2222", "0");
+        Integer scoreInt = score.fuzzyScore(fileService.getById(id1).getContent(), fileService.getById(id2).getContent());
         return new ResponseEntity<>(scoreInt, HttpStatus.OK);
     }
 }
