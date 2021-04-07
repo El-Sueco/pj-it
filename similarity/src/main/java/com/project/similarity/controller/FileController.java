@@ -3,7 +3,7 @@ package com.project.similarity.controller;
 import com.project.similarity.db.entity.File;
 import com.project.similarity.db.service.FileService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.text.similarity.FuzzyScore;
+import org.apache.commons.text.similarity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,10 +29,60 @@ public class FileController {
         return new ResponseEntity<>(types, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/test-lib/{id1}/{id2}", method = RequestMethod.GET)
-    public ResponseEntity<Integer> test(@PathVariable Long id1, @PathVariable Long id2){
+    @RequestMapping(value = "/test-fuzzy/{id1}/{id2}", method = RequestMethod.GET)
+    public ResponseEntity<Integer> testFuzzy(@PathVariable Long id1, @PathVariable Long id2){
         FuzzyScore score = new FuzzyScore(Locale.GERMAN);
         Integer scoreInt = score.fuzzyScore(fileService.getById(id1).getContent(), fileService.getById(id2).getContent());
+        return new ResponseEntity<>(scoreInt, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/test-lcsd/{id1}/{id2}", method = RequestMethod.GET)
+    public ResponseEntity<Integer> testLcsd(@PathVariable Long id1, @PathVariable Long id2){
+        LongestCommonSubsequenceDistance score = new LongestCommonSubsequenceDistance();
+        Integer scoreInt = score.apply(fileService.getById(id1).getContent(), fileService.getById(id2).getContent());
+        return new ResponseEntity<>(scoreInt, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/test-hamming/{id1}/{id2}", method = RequestMethod.GET)
+    public ResponseEntity<Integer> testHamming(@PathVariable Long id1, @PathVariable Long id2){
+        HammingDistance score = new HammingDistance();
+        Integer scoreInt = score.apply(fileService.getById(id1).getContent(), fileService.getById(id2).getContent());
+        return new ResponseEntity<>(scoreInt, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/test-cosine-distance/{id1}/{id2}", method = RequestMethod.GET)
+    public ResponseEntity<Double> testCosineDistance(@PathVariable Long id1, @PathVariable Long id2){
+        CosineDistance score = new CosineDistance();
+        Double scoreDouble = score.apply(fileService.getById(id1).getContent(), fileService.getById(id2).getContent());
+        return new ResponseEntity<>(scoreDouble, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/test-cosine-similarity/{id1}/{id2}", method = RequestMethod.GET)
+    public ResponseEntity<Double> testCosineSimilarity(@PathVariable Long id1, @PathVariable Long id2){
+        /*CosineSimilarity score = new CosineSimilarity();
+        Double scoreDouble = score.cosineSimilarity(fileService.getById(id1).getContent(), fileService.getById(id2).getContent());
+        return new ResponseEntity<>(scoreDouble, HttpStatus.OK);*/
+        return null;
+    }
+
+    @RequestMapping(value = "/test-jaro-distance/{id1}/{id2}", method = RequestMethod.GET)
+    public ResponseEntity<Double> testJaroDist(@PathVariable Long id1, @PathVariable Long id2){
+        JaroWinklerDistance score = new JaroWinklerDistance();
+        Double scoreDouble = score.apply(fileService.getById(id1).getContent(), fileService.getById(id2).getContent());
+        return new ResponseEntity<>(scoreDouble, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/test-jaro-similarity/{id1}/{id2}", method = RequestMethod.GET)
+    public ResponseEntity<Double> testJaroSim(@PathVariable Long id1, @PathVariable Long id2){
+        JaroWinklerDistance score = new JaroWinklerDistance();
+        Double scoreDouble = score.apply(fileService.getById(id1).getContent(), fileService.getById(id2).getContent());
+        return new ResponseEntity<>(scoreDouble, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/test-levenstein/{id1}/{id2}", method = RequestMethod.GET)
+    public ResponseEntity<Integer> testLeve(@PathVariable Long id1, @PathVariable Long id2){
+        LevenshteinDistance score = new LevenshteinDistance();
+        Integer scoreInt = score.apply(fileService.getById(id1).getContent(), fileService.getById(id2).getContent());
         return new ResponseEntity<>(scoreInt, HttpStatus.OK);
     }
 }
