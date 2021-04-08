@@ -1,8 +1,14 @@
 package com.project.similarity.controller;
 
+import com.github.difflib.DiffUtils;
+import com.github.difflib.patch.AbstractDelta;
+import com.github.difflib.patch.Patch;
 import com.project.similarity.db.entity.File;
 import com.project.similarity.db.service.FileService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.diff.EditScript;
+import org.apache.commons.text.diff.StringsComparator;
 import org.apache.commons.text.similarity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -40,6 +47,24 @@ public class FileController {
     public ResponseEntity<Integer> testLcsd(@PathVariable Long id1, @PathVariable Long id2){
         LongestCommonSubsequenceDistance score = new LongestCommonSubsequenceDistance();
         Integer scoreInt = score.apply(fileService.getById(id1).getContent(), fileService.getById(id2).getContent());
+
+        //test show diff
+        StringsComparator comparator = new StringsComparator(fileService.getById(id1).getContent(), fileService.getById(id2).getContent());
+        EditScript<Character> script = comparator.getScript();
+
+        log.info(StringUtils.difference(fileService.getById(id1).getContent(), fileService.getById(id2).getContent()));
+        log.warn("===other===");
+
+        List<String> original = Arrays.asList(fileService.getById(id1).getContent().split("\\r?\\n"));
+        List<String> revised = Arrays.asList(fileService.getById(id2).getContent().split("\\r?\\n"));
+        log.warn(original.toString());
+        Patch<String> patch = DiffUtils.diff(original, revised);
+
+        for (AbstractDelta<String> delta : patch.getDeltas()) {
+            log.info(delta.toString());
+        }
+        // test show diff
+
         return new ResponseEntity<>(scoreInt, HttpStatus.OK);
     }
 
