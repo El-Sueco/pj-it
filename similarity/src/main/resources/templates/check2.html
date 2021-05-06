@@ -51,16 +51,13 @@
     <hr>
 
       <div class="container">
-        <form>
+        <form action="/similarity/check-two-models" method="post">
             <div class="form-group row">
               <div class="col-md-6">
-                <h6>Prozessmodelltyp auswählen:</h6>
+                  <h6><label for="types">Prozessmodelltyp auswählen:</label></h6>
               </div>
               <div class="col-md-6">
-                <select class="form-control">
-                    <option value="bpmn">BPMN</option>
-                    <option value="flowchart">Flussdiagramm</option>
-                    <option value="eEPK">eEPK</option>
+                <select id="types" class="form-control">
                 </select>
               </div>
             </div>
@@ -73,36 +70,27 @@
                 </select>
               </div>
             </div>
+            <div class="container">
+                <div class="row mt-3">
+
+                    <div class="col-md-6">
+                        <h6><label for="model-one">Modell 1 auswählen:</label></h6>
+                        <select id="model-one" class="form-control">
+                            <option value='-1'>Select a File</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <h6><label for="model-two">Modell 2 auswählen:</label></h6>
+                        <select id="model-two" class="form-control">
+                            <option value='-1'>Select a File</option>
+                        </select>
+                    </div>
+                </div>
+                <input type="submit" class="btn-primary mt-3" value="Berechnen">
+            </div>
         </form>
       </div>
 
-      <div class="container">
-        <div class="row mt-3">
-            
-            <div class="col-md-6">
-                <h6>Modell 1 auswählen:</h6> 
-                <select class="form-control">
-                  <!-- sample content -->
-                  <option value="asgsdg.xml">Zeichnung1</option>
-                  <option value="filename.xml">Zeichnung2</option>
-                  <option value="flowchart24.xml">Zeichnung3</option>
-                </select>
-            </div>
-            <div class="col-md-6">
-                <h6>Modell 2 auswählen:</h6>
-                <select class="form-control">
-                  <!-- sample content -->
-                  <option value="asgsdg.xml">Zeichnung1</option>
-                  <option value="filename.xml">Zeichnung2</option>
-                  <option value="flowchart24.xml">Zeichnung3</option>
-                </select>
-            </div>
-        </div>
-
-    <button class="btn-primary mt-3" onclick="calculate()">berechnen</button>
-    <!-- TODO: JavaScript alert? -->
-
-    </div>
 
     <hr>
 
@@ -201,7 +189,6 @@
                 var text = "";
                 text += "<option value='-1'>Select an Algorithm</option>";
                 $.each(data, function (key, val) {
-                    console.log(val);
                     text += "<option value=" + val.id + ">" + val.friendlyName + "</option>";
                 });
                 $("#algos").html(text);
@@ -210,7 +197,59 @@
                 alert("an error occured");
                 console.table(msg);
             }
-        })
+        });
+
+        $.ajax({
+            url: "http://localhost:8080/types/all",
+            method: "get",
+            dataType: "json",
+            success: function (data, msg) {
+                var text = "";
+                text += "<option value='-1'>Select a Type</option>";
+                $.each(data, function (key, val) {
+                    text += "<option value=" + val.id + ">" + val.name + "</option>";
+                });
+                $("#types").html(text);
+            },
+            error: function (msg) {
+                alert("an error occured");
+                console.table(msg);
+            }
+        });
+
+        $("#types").change(function(e) {
+            var text = "";
+            text += "<option value='-1'>Select a File</option>";
+            if(this.value > 0) {
+                let data = JSON.stringify({
+                    "type": this.value
+                });
+                $.ajax({
+                    url: "http://localhost:8080/files/all-by-type",
+                    method: "post",
+                    dataType: "json",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    data: data,
+                    success: function (data, msg) {
+                        $.each(data, function (key, val) {
+                            text += "<option value=" + val.id + ">" + val.name + "</option>";
+                        });
+                        $("#model-one").html(text);
+                        $("#model-two").html(text);
+                    },
+                    error: function (msg) {
+                        alert("an error occured");
+                        console.table(msg);
+                    }
+                });
+            } else {
+                $("#model-one").html(text);
+                $("#model-two").html(text);
+            }
+        });
     });
 </script>
 </body>
