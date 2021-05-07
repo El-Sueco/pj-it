@@ -2,33 +2,6 @@ $(document).ready(function (e) {
     let path = window.location.pathname;
 
     if(path.startsWith("/check-two")) {
-        var ctx = document.getElementById('chart1').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'horizontalBar',
-            data: {
-
-                datasets: [{
-                    label: 'Ähnlichkeit in %',
-                    data: [87],
-                    backgroundColor: 'rgba(50, 67, 251, 0.8)',
-                    borderColor: 'black',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    xAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                            suggestedMax: 100,
-                            suggestedMin: 100
-
-                        }
-                    }]
-                }
-            }
-        });
-
         var ctx = document.getElementById('chart2').getContext('2d');
         var myChart = new Chart(ctx, {
             type: 'bar',
@@ -143,7 +116,8 @@ $(document).ready(function (e) {
                 },
                 data: data,
                 success: function (data, msg) {
-                    console.log(data)
+                    console.log(data);
+                    buildChartJs(data.similarity)
                 },
                 error: function (msg) {
                     alert("an error occured");
@@ -153,3 +127,29 @@ $(document).ready(function (e) {
         });
     }
 });
+
+function buildChartJs(value) {
+    var ctx = document.getElementById('chart1').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: {
+
+            datasets: [{
+                label: 'Ähnlichkeitsscore',
+                data: [value],
+                backgroundColor: 'rgba(50, 67, 251, 0.8)',
+                borderColor: 'black',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+}
