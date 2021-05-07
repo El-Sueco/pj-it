@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.project.similarity.utils.ComparisonUtils.compareTwoModels;
+
 @RestController
 @RequestMapping("/similarity")
 public class SimilarityController {
@@ -35,8 +37,10 @@ public class SimilarityController {
         Type type = typeService.getById(request.getType());
         Algo algo = algoService.getById(request.getAlgo());
 
+        Number result = compareTwoModels(algo, fileOne, fileTwo);
+
         CheckTwoResponse response = new CheckTwoResponse();
-        response.setYeah(true);
+        response.setSimilarity(result);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
