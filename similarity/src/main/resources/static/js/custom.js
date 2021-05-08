@@ -2,31 +2,6 @@ $(document).ready(function (e) {
     let path = window.location.pathname;
 
     if(path.startsWith("/check-two")) {
-        var ctx = document.getElementById('chart2').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Cosine Distance', 'Cosine Similarity', 'Fuzzy Score', 'Hamming Distance', 'Jaro-Winkler Distance', 'Jaro-Winkler Similarity', 'Levenshtein Distance', 'Longest Common Subsequence Distance'],
-                datasets: [{
-                    label: 'Ähnlichkeit in %',
-                    data: [97, 72, 87, 50, 92, 43, 66, 70],
-                    backgroundColor: 'rgba(50, 67, 251, 0.8)',
-                    borderColor: 'black',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                            suggestedMax: 100,
-                            suggestedMin: 100
-                        }
-                    }]
-                }
-            }
-        });
 
         $.ajax({
             url: "http://localhost:8080/algos/all",
@@ -117,7 +92,8 @@ $(document).ready(function (e) {
                 data: data,
                 success: function (data, msg) {
                     console.log(data);
-                    buildChartJs(data.similarity)
+                    buildChartJs(data.similarity);
+                    buildChartJsAll();
                 },
                 error: function (msg) {
                     alert("an error occured");
@@ -147,6 +123,34 @@ function buildChartJs(value) {
                 xAxes: [{
                     ticks: {
                         beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+}
+
+function buildChartJsAll() {
+    var ctx = document.getElementById('chart2').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Cosine Distance', 'Cosine Similarity', 'Fuzzy Score', 'Hamming Distance', 'Jaro-Winkler Distance', 'Jaro-Winkler Similarity', 'Levenshtein Distance', 'Longest Common Subsequence Distance'],
+            datasets: [{
+                label: 'Ähnlichkeit in %',
+                data: [97, 72, 87, 50, 92, 43, 66, 70],
+                backgroundColor: 'rgba(50, 67, 251, 0.8)',
+                borderColor: 'black',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        suggestedMax: 100,
+                        suggestedMin: 100
                     }
                 }]
             }
