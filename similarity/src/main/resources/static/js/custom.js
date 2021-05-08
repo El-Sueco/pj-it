@@ -92,7 +92,7 @@ $(document).ready(function (e) {
                 data: data,
                 success: function (data, msg) {
                     console.log(data);
-                    buildChartJs(data.similarity);
+                    buildChartJs(data.similarity, data.resultText);
                     buildChartJsAll();
                 },
                 error: function (msg) {
@@ -104,7 +104,7 @@ $(document).ready(function (e) {
     }
 });
 
-function buildChartJs(value) {
+function buildChartJs(value, resultText) {
     var ctx = document.getElementById('chart1').getContext('2d');
     var myChart = new Chart(ctx, {
         type: 'horizontalBar',
@@ -128,6 +128,8 @@ function buildChartJs(value) {
             }
         }
     });
+    rt = document.getElementById("resultText");
+    rt.innerHTML = resultText;
 }
 
 function buildChartJsAll() {
@@ -137,7 +139,7 @@ function buildChartJsAll() {
         data: {
             labels: ['Cosine Distance', 'Cosine Similarity', 'Fuzzy Score', 'Hamming Distance', 'Jaro-Winkler Distance', 'Jaro-Winkler Similarity', 'Levenshtein Distance', 'Longest Common Subsequence Distance'],
             datasets: [{
-                label: 'Ähnlichkeit in %',
+                label: 'Ähnlichkeitsscore',
                 data: [97, 72, 87, 50, 92, 43, 66, 70],
                 backgroundColor: 'rgba(50, 67, 251, 0.8)',
                 borderColor: 'black',

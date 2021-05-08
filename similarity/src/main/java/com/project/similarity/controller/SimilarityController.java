@@ -48,6 +48,7 @@ public class SimilarityController {
 
             SuccessCheckTwoResponse response = new SuccessCheckTwoResponse();
             response.setSimilarity(result);
+            response.setResultText("Der Algorithmus " + algo.getName() + " hat einen Score von " + result + " Punkten!");
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch(ValidationException e) {
             ErrorResponse response = new ErrorResponse();
