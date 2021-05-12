@@ -91,8 +91,7 @@ $(document).ready(function (e) {
                 },
                 data: data,
                 success: function (data, msg) {
-                    console.log(data);
-                    buildChartJs(data.similarity, data.resultText);
+                    buildChartJs(data.similarity);
                     buildChartJsAll();
                 },
                 error: function (msg) {
@@ -104,7 +103,7 @@ $(document).ready(function (e) {
     }
 });
 
-function buildChartJs(value, resultText) {
+function buildChartJs(value) {
     var ctx = document.getElementById('chart1').getContext('2d');
     var myChart = new Chart(ctx, {
         type: 'horizontalBar',
@@ -128,8 +127,8 @@ function buildChartJs(value, resultText) {
             }
         }
     });
-    rt = document.getElementById("resultText");
-    rt.innerHTML = resultText;
+    $("#resultText").html("Der Algorithmus <b>" + $('#algos option:selected').html() + "</b> hat einen Score von <b>" + value + "</b> Punkten!");
+    $('.container').removeClass('invisible');
 }
 
 function buildChartJsAll() {
