@@ -17,31 +17,26 @@
 
     <div class="container">
         <h3>Upload Area </h3>
-        <form>
+        <form id="upload-file-form">
             <div class="form-group row">
               <div class="col-md-6">
-                <label>Bezeichnung:</label>
-                <input type="text" class="form-control" placeholder="Hier eintragen">
+                <label for="bezeichnung">Bezeichnung:</label>
+                <input id="bezeichnung" type="text" class="form-control" placeholder="Hier eintragen" name="name">
               </div>
               <div class="col-md-6">
-                <label>Prozessmodell:</label>
-                <select class="form-control">
-                    <option value="bpmn">BPMN</option>
-                    <option value="flowchart">Flussdiagramm</option>
-                    <option value="eEPK">eEPK</option>
+                <label for="type">Prozessmodell:</label>
+                <select id="type" class="form-control" name="type">
                 </select>
               </div>
             </div>
+            <div class="form-group mt-3">
+                <label for="file">Datei: </label>
+                <input id="file" type="file" accept=".xml">
+                <input id="file-content" type="hidden" name="file-content" value="empty">
+                <p class="help-block">Nur xml-Format zulässig!</p>
+            </div>
+            <input type="submit" id="submit" class="btn btn-primary" value="upload">
         </form>
-
-        <div class="form-group mt-3">
-            <label>Datei: </label>
-            <input type="file" accept=".xml">
-
-
-            <p class="help-block">Nur xml-Format zulässig!</p>
-        </div>
-        <button class="btn btn-primary" onclick="upload()">upload</button>
 
     </div>
     <hr>
@@ -64,28 +59,6 @@
 
     <!-- script necessary for bootstrap functions -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
-
-    <script>
-      function upload() {
-        confirm("Error: Bitte alle Felder ausfüllen!")
-      }
-    </script>
-
-    <script>
-      $(document).ready( function () {
-        var table = $('#models').DataTable({
-          "sAjaxSource": "/files/all",
-          "sAjaxDataProp": "",
-          "aoColumns": [
-            { "mData": "id"},
-            { "mData": "name" },
-            { "mData": "fileName" },
-            { "mData": "type.name" },
-            { "mData": "department.name" }
-          ]
-        })
-      });
-    </script>
-
+    <script type="text/javascript" src="js/custom.js"></script>
 </body>
 </html>

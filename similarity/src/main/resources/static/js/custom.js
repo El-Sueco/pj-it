@@ -1,7 +1,7 @@
 $(document).ready(function (e) {
     let path = window.location.pathname;
 
-    if(path.startsWith("/check-two")) {
+    if (path.startsWith("/check-two")) {
 
         $.ajax({
             url: "http://localhost:8080/algos/all",
@@ -39,10 +39,10 @@ $(document).ready(function (e) {
             }
         });
 
-        $("#types").change(function(e) {
+        $("#types").change(function (e) {
             var text = "";
             text += "<option value='-1'>Select a File</option>";
-            if(this.value > 0) {
+            if (this.value > 0) {
                 let data = JSON.stringify({
                     "type": this.value
                 });
@@ -73,7 +73,7 @@ $(document).ready(function (e) {
             }
         });
 
-        $('#check-two-models-form').submit(function(event) {
+        $('#check-two-models-form').submit(function (event) {
             event.preventDefault();
             let data = JSON.stringify({
                 "type": $('#types option:selected').val(),
@@ -99,6 +99,81 @@ $(document).ready(function (e) {
                     console.table(msg);
                 }
             });
+        });
+    }
+
+    if (path.startsWith("/database")) {
+        $('#file').on('change', function () {
+            const file = this.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#file-content').val(reader.result);
+            }
+
+            reader.readAsText(file);
+        });
+
+        $('#upload-file-form').submit(function (event) {
+            event.preventDefault();
+            let fileName = $('#file').val();
+            let data = JSON.stringify({
+                "type": $('#type option:selected').val(),
+                "name": $("#bezeichnung").val(),
+                "fileName": fileName.substring(fileName.lastIndexOf('/') + 1),
+                "file": $("#file-content").val()
+            });
+
+            $.ajax({
+                url: "http://localhost:8080/files/upload",
+                method: "post",
+                dataType: "json",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                data: data,
+                success: function (data, msg) {
+                    console.log("yes")
+                    // TODO call rebuild datatable here
+                },
+                error: function (msg) {
+                    alert("an error occured");
+                    console.table(msg);
+                }
+            });
+        });
+
+        $.ajax({
+            url: "http://localhost:8080/types/all",
+            method: "get",
+            dataType: "json",
+            success: function (data, msg) {
+                var text = "";
+                text += "<option value='-1'>Select a Type</option>";
+                $.each(data, function (key, val) {
+                    text += "<option value=" + val.id + ">" + val.name + "</option>";
+                });
+                $("#type").html(text);
+            },
+            error: function (msg) {
+                alert("an error occured");
+                console.table(msg);
+            }
+        });
+
+        $(document).ready(function () {
+            var table = $('#models').DataTable({
+                "sAjaxSource": "/files/all",
+                "sAjaxDataProp": "",
+                "aoColumns": [
+                    {"mData": "id"},
+                    {"mData": "name"},
+                    {"mData": "fileName"},
+                    {"mData": "type.name"},
+                    {"mData": "department.name"}
+                ]
+            })
         });
     }
 });
