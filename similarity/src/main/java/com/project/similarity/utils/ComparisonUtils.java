@@ -7,6 +7,7 @@ import com.github.difflib.text.DiffRow;
 import com.github.difflib.text.DiffRowGenerator;
 import com.project.similarity.db.entity.Algo;
 import com.project.similarity.db.entity.File;
+import com.project.similarity.utils.models.FileDiff;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.diff.EditScript;
@@ -14,6 +15,7 @@ import org.apache.commons.text.diff.StringsComparator;
 import org.apache.commons.text.similarity.*;
 
 import javax.el.MethodNotFoundException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -22,7 +24,6 @@ import java.util.Locale;
 public class ComparisonUtils {
 
     public static Number compareTwoModels(Algo algo, File f1, File f2) {
-        showDiff(f1, f2);
         switch (algo.getName()) {
             case "FuzzyScore":
                 return fuzzyScore(f1, f2);
@@ -45,7 +46,8 @@ public class ComparisonUtils {
         }
     }
 
-    public static void showDiff(File f1, File f2) {
+    // TODO delete log lines, where not necessary
+    public static FileDiff showDiff(File f1, File f2) {
         DiffRowGenerator generator = DiffRowGenerator.create()
                 .showInlineDiffs(true)
                 .inlineDiffByWord(true)
@@ -58,10 +60,15 @@ public class ComparisonUtils {
 
         log.info("|original|new|");
         log.info("|--------|---|");
+        List<String> fileOne = new ArrayList<>();
+        List<String> fileTwo = new ArrayList<>();
         for (DiffRow row : rows) {
+            fileOne.add(row.getOldLine().replace("&lt;", "<").replace("&gt;", ">"));
+            fileTwo.add(row.getNewLine().replace("&lt;", "<").replace("&gt;", ">"));
             log.info("|" + row.getOldLine().replace("&lt;", "<").replace("&gt;", ">")
                     + "|" + row.getNewLine().replace("&lt;", "<").replace("&gt;", ">") + "|");
         }
+        return new FileDiff(fileOne, fileTwo);
     }
 
     private static Integer fuzzyScore(File f1, File f2){

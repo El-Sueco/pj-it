@@ -11,6 +11,7 @@ import com.project.similarity.db.service.AlgoService;
 import com.project.similarity.db.service.FileService;
 import com.project.similarity.db.service.TypeService;
 import com.project.similarity.exceptions.ValidationException;
+import com.project.similarity.utils.models.FileDiff;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import static com.project.similarity.utils.ComparisonUtils.compareTwoModels;
+import static com.project.similarity.utils.ComparisonUtils.showDiff;
 import static com.project.similarity.utils.ValidationUtils.checkRightFileTypes;
 
 @RestController
@@ -46,8 +48,11 @@ public class SimilarityController {
 
             Number result = compareTwoModels(algo, fileOne, fileTwo);
 
+            FileDiff resultDiff = showDiff(fileOne, fileTwo);
+
             SuccessCheckTwoResponse response = new SuccessCheckTwoResponse();
             response.setSimilarity(result);
+            response.setFileDiff(resultDiff);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch(ValidationException e) {
             ErrorResponse response = new ErrorResponse();
