@@ -3,6 +3,8 @@ package com.project.similarity.utils;
 import com.github.difflib.DiffUtils;
 import com.github.difflib.patch.AbstractDelta;
 import com.github.difflib.patch.Patch;
+import com.github.difflib.text.DiffRow;
+import com.github.difflib.text.DiffRowGenerator;
 import com.project.similarity.db.entity.Algo;
 import com.project.similarity.db.entity.File;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,7 @@ import java.util.Locale;
 public class ComparisonUtils {
 
     public static Number compareTwoModels(Algo algo, File f1, File f2) {
+        showDiff(f1, f2);
         switch (algo.getName()) {
             case "FuzzyScore":
                 return fuzzyScore(f1, f2);
@@ -42,6 +45,25 @@ public class ComparisonUtils {
         }
     }
 
+    public static void showDiff(File f1, File f2) {
+        DiffRowGenerator generator = DiffRowGenerator.create()
+                .showInlineDiffs(true)
+                .inlineDiffByWord(true)
+                .oldTag(f -> "---")
+                .newTag(f -> "+++")
+                .build();
+        List<DiffRow> rows = generator.generateDiffRows(
+                Arrays.asList(f1.getContent().split("\\r?\\n")),
+                Arrays.asList(f2.getContent().split("\\r?\\n")));
+
+        log.info("|original|new|");
+        log.info("|--------|---|");
+        for (DiffRow row : rows) {
+            log.info("|" + row.getOldLine().replace("&lt;", "<").replace("&gt;", ">")
+                    + "|" + row.getNewLine().replace("&lt;", "<").replace("&gt;", ">") + "|");
+        }
+    }
+
     private static Integer fuzzyScore(File f1, File f2){
         FuzzyScore score = new FuzzyScore(Locale.GERMAN);
         return score.fuzzyScore(f1.getContent(), f2.getContent());
@@ -49,26 +71,7 @@ public class ComparisonUtils {
 
     private static Integer longestCommonSubsequenceDistance(File f1, File f2){
         LongestCommonSubsequenceDistance score = new LongestCommonSubsequenceDistance();
-        Integer scoreInt = score.apply(f1.getContent(), f2.getContent());
-
-        //test show diff
-        StringsComparator comparator = new StringsComparator(f1.getContent(), f2.getContent());
-        EditScript<Character> script = comparator.getScript();
-
-        log.info(StringUtils.difference(f1.getContent(), f2.getContent()));
-        log.warn("===other===");
-
-        List<String> original = Arrays.asList(f1.getContent().split("\\r?\\n"));
-        List<String> revised = Arrays.asList(f2.getContent().split("\\r?\\n"));
-        log.warn(original.toString());
-        Patch<String> patch = DiffUtils.diff(original, revised);
-
-        for (AbstractDelta<String> delta : patch.getDeltas()) {
-            log.info(delta.toString());
-        }
-        // test show diff
-
-        return scoreInt;
+        return score.apply(f1.getContent(), f2.getContent());
     }
 
     private static Integer hammingDistance(File f1, File f2){
