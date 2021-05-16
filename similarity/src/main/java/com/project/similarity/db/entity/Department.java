@@ -1,7 +1,6 @@
 package com.project.similarity.db.entity;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

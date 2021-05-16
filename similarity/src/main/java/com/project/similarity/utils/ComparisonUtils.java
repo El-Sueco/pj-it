@@ -1,17 +1,11 @@
 package com.project.similarity.utils;
 
-import com.github.difflib.DiffUtils;
-import com.github.difflib.patch.AbstractDelta;
-import com.github.difflib.patch.Patch;
 import com.github.difflib.text.DiffRow;
 import com.github.difflib.text.DiffRowGenerator;
 import com.project.similarity.db.entity.Algo;
 import com.project.similarity.db.entity.File;
 import com.project.similarity.utils.models.FileDiff;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.diff.EditScript;
-import org.apache.commons.text.diff.StringsComparator;
 import org.apache.commons.text.similarity.*;
 
 import javax.el.MethodNotFoundException;

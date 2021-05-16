@@ -1,9 +1,7 @@
 package com.project.similarity.controller;
 
 import com.project.similarity.db.entity.Algo;
-import com.project.similarity.db.entity.Type;
 import com.project.similarity.db.service.AlgoService;
-import com.project.similarity.db.service.TypeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

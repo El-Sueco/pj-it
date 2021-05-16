@@ -2,8 +2,8 @@ package com.project.similarity.controller;
 
 import com.project.similarity.controller.requests.CheckTwoRequest;
 import com.project.similarity.controller.response.ErrorResponse;
-import com.project.similarity.controller.response.SuccessCheckTwoResponse;
 import com.project.similarity.controller.response.PostResponse;
+import com.project.similarity.controller.response.SuccessCheckTwoResponse;
 import com.project.similarity.db.entity.Algo;
 import com.project.similarity.db.entity.File;
 import com.project.similarity.db.entity.Type;

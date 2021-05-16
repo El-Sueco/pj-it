@@ -1,9 +1,7 @@
 package com.project.similarity.db.service;
 
 import com.project.similarity.db.entity.Department;
-import com.project.similarity.db.entity.Type;
 import com.project.similarity.db.repository.DepartmentRepository;
-import com.project.similarity.db.repository.TypeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
