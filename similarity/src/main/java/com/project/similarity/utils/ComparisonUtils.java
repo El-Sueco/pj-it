@@ -57,8 +57,8 @@ public class ComparisonUtils {
         List<String> fileOne = new ArrayList<>();
         List<String> fileTwo = new ArrayList<>();
         for (DiffRow row : rows) {
-            fileOne.add(row.getOldLine().replace("&lt;", "<").replace("&gt;", ">"));
-            fileTwo.add(row.getNewLine().replace("&lt;", "<").replace("&gt;", ">"));
+            fileOne.add(row.getOldLine());
+            fileTwo.add(row.getNewLine());
             log.info("|" + row.getOldLine().replace("&lt;", "<").replace("&gt;", ">")
                     + "|" + row.getNewLine().replace("&lt;", "<").replace("&gt;", ">") + "|");
         }

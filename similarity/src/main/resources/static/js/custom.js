@@ -1,8 +1,20 @@
 $(document).ready(function (e) {
     let path = window.location.pathname;
 
-    if (path.startsWith("/check-two")) {
+    if (path.endsWith("/")) {
+        $('.nav-link').filter(':contains("Über")').addClass("active");
+    }
 
+    if (path.startsWith("/check-more")) {
+        $('.nav-link').filter(':contains("Ähnlichkeitsprüfung")').addClass("active");
+    }
+
+    if (path.startsWith("/manual")) {
+        $('.nav-link').filter(':contains("Anleitung")').addClass("active");
+    }
+
+    if (path.startsWith("/check-two")) {
+        $('.nav-link').filter(':contains("Ähnlichkeitsprüfung")').addClass("active");
         $.ajax({
             url: "http://localhost:8080/algos/all",
             method: "get",
@@ -75,6 +87,8 @@ $(document).ready(function (e) {
 
         $('#check-two-models-form').submit(function (event) {
             event.preventDefault();
+            let fOne = $('#model-one option:selected').html();
+            let fTwo = $('#model-two option:selected').html();
             let data = JSON.stringify({
                 "type": $('#types option:selected').val(),
                 "algo": $('#algos option:selected').val(),
@@ -92,7 +106,9 @@ $(document).ready(function (e) {
                 data: data,
                 success: function (data, msg) {
                     buildChartJs(data.similarity);
-                    buildChartJsAll();
+                    showDiff(fOne, fTwo, data.fileDiff);
+                    //buildChartJsAll();
+                    $('.container').removeClass('invisible');
                 },
                 error: function (msg) {
                     alert("an error occured");
@@ -103,6 +119,7 @@ $(document).ready(function (e) {
     }
 
     if (path.startsWith("/database")) {
+        $('.nav-link').filter(':contains("Datenbank")').addClass("active");
         $('#file').on('change', function () {
             const file = this.files[0];
             const reader = new FileReader();
@@ -120,7 +137,7 @@ $(document).ready(function (e) {
             let data = JSON.stringify({
                 "type": $('#type option:selected').val(),
                 "name": $("#bezeichnung").val(),
-                "fileName": fileName.substring(fileName.lastIndexOf('/') + 1),
+                "fileName": fileName.substring(fileName.lastIndexOf('\\') + 1),
                 "file": $("#file-content").val()
             });
 
@@ -134,8 +151,7 @@ $(document).ready(function (e) {
                 },
                 data: data,
                 success: function (data, msg) {
-                    console.log("yes")
-                    // TODO call rebuild datatable here
+                    window.location.reload();
                 },
                 error: function (msg) {
                     alert("an error occured");
@@ -178,6 +194,30 @@ $(document).ready(function (e) {
     }
 });
 
+function showDiff(fOne, fTwo, diff) {
+    let html = "<thead><tr><th>" + fOne + "</th><th>" + fTwo + "</th></tr></thead><tbody>";
+    for(let i = 0; i < diff.fileOne.length; i++) {
+        let a = diff.fileOne[i];
+        let b = diff.fileTwo[i];
+        html += "<tr>";
+        if(a.toString().includes("+++") || a.toString().includes("---")) {
+            html += "<td class='" + (a.toString().includes("+++") ? "bg-success" : "bg-danger text-white") + "'>" + a + "</td>";
+            //html += "<td class='" + (a.toString().includes("+++") ? "text-success" : "text-danger") + "'>" + a + "</td>";
+        } else {
+            html += "<td>" + a + "</td>";
+        }
+        if(b.toString().includes("+++") || b.toString().includes("---")) {
+            html += "<td class='" + (b.toString().includes("+++") ? "bg-success" : "bg-danger text-white") + "'>" + b + "</td>";
+            //html += "<td class='" + (b.toString().includes("+++") ? "text-success" : "text-danger") + "'>" + b + "</td>";
+        } else {
+            html += "<td>" + b + "</td>";
+        }
+        html += "</tr>"
+    }
+    html += "</tbody>";
+    $("#result-diff").html(html);
+}
+
 function buildChartJs(value) {
     var ctx = document.getElementById('chart1').getContext('2d');
     var myChart = new Chart(ctx, {
@@ -203,7 +243,6 @@ function buildChartJs(value) {
         }
     });
     $("#resultText").html("Der Algorithmus <b>" + $('#algos option:selected').html() + "</b> hat einen Score von <b>" + value + "</b> Punkten!");
-    $('.container').removeClass('invisible');
 }
 
 function buildChartJsAll() {
