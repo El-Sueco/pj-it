@@ -200,17 +200,13 @@ function showDiff(fOne, fTwo, diff) {
         let a = diff.fileOne[i];
         let b = diff.fileTwo[i];
         html += "<tr>";
-        if(a.toString().includes("+++") || a.toString().includes("---")) {
-            html += "<td class='" + (a.toString().includes("+++") ? "bg-success" : "bg-danger text-white") + "'>" + a + "</td>";
-            //html += "<td class='" + (a.toString().includes("+++") ? "text-success" : "text-danger") + "'>" + a + "</td>";
-        } else {
-            html += "<td>" + a + "</td>";
+
+        if (a.toString() === b.toString()) {
+            html += "<td class='" + ("bg-warning text-white") + "'>" + a + "</td>";
+            html += "<td class='" + ("bg-warning text-white") + "'>" + b + "</td>";
         }
-        if(b.toString().includes("+++") || b.toString().includes("---")) {
-            html += "<td class='" + (b.toString().includes("+++") ? "bg-success" : "bg-danger text-white") + "'>" + b + "</td>";
-            //html += "<td class='" + (b.toString().includes("+++") ? "text-success" : "text-danger") + "'>" + b + "</td>";
-        } else {
-            html += "<td>" + b + "</td>";
+        else {
+            html += "<td>" + a + "</td>";
         }
         html += "</tr>"
     }

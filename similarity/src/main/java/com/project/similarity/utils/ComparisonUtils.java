@@ -45,8 +45,8 @@ public class ComparisonUtils {
         DiffRowGenerator generator = DiffRowGenerator.create()
                 .showInlineDiffs(true)
                 .inlineDiffByWord(true)
-                .oldTag(f -> "---")
-                .newTag(f -> "+++")
+                //.oldTag(f -> "---")
+                //.newTag(f -> "+++")
                 .build();
         List<DiffRow> rows = generator.generateDiffRows(
                 Arrays.asList(f1.getContent().split("\\r?\\n")),
