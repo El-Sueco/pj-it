@@ -17,17 +17,10 @@ public class File {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "file_name")
-    private String fileName;
-
-    @Column(name = "content", columnDefinition = "text")
-    private String content;
+    @Column(name = "path", columnDefinition = "text")
+    private String path;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="type_id")
-    private Type type;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="department_id")
-    private Department department;
+    @JoinColumn(name="aufgabe_id")
+    private Aufgabe aufgabe;
 }

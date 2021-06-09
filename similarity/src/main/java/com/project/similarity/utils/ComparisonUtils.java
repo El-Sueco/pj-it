@@ -2,7 +2,6 @@ package com.project.similarity.utils;
 
 import com.github.difflib.text.DiffRow;
 import com.github.difflib.text.DiffRowGenerator;
-import com.project.similarity.db.entity.Algo;
 import com.project.similarity.db.entity.File;
 import com.project.similarity.utils.models.FileDiff;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +16,8 @@ import java.util.Locale;
 @Slf4j
 public class ComparisonUtils {
 
-    public static Number compareTwoModels(Algo algo, File f1, File f2) {
+    /*
+    public static Number compareTwoModels(File f1, File f2) {
         switch (algo.getName()) {
             case "FuzzyScore":
                 return fuzzyScore(f1, f2);
@@ -39,8 +39,9 @@ public class ComparisonUtils {
                 throw new MethodNotFoundException();
         }
     }
+*/
 
-    // TODO delete log lines, where not necessary
+    // TODO: delete log lines, where not necessary
     public static FileDiff showDiff(File f1, File f2) {
         DiffRowGenerator generator = DiffRowGenerator.create()
                 .showInlineDiffs(true)
@@ -49,8 +50,10 @@ public class ComparisonUtils {
                 //.newTag(f -> "+++")
                 .build();
         List<DiffRow> rows = generator.generateDiffRows(
-                Arrays.asList(f1.getContent().split("\\r?\\n")),
-                Arrays.asList(f2.getContent().split("\\r?\\n")));
+                Arrays.asList("".split("\\r?\\n")),
+                //Arrays.asList(f1.getContent().split("\\r?\\n")),
+                Arrays.asList("".split("\\r?\\n")));
+                //Arrays.asList(f2.getContent().split("\\r?\\n")));
 
         log.info("|original|new|");
         log.info("|--------|---|");
@@ -65,24 +68,28 @@ public class ComparisonUtils {
         return new FileDiff(fileOne, fileTwo);
     }
 
+    @Deprecated
     private static Integer fuzzyScore(File f1, File f2){
         FuzzyScore score = new FuzzyScore(Locale.GERMAN);
-        return score.fuzzyScore(f1.getContent(), f2.getContent());
+        return score.fuzzyScore("f1.getContent()", "f2.getContent()");
     }
 
+    @Deprecated
     private static Integer longestCommonSubsequenceDistance(File f1, File f2){
         LongestCommonSubsequenceDistance score = new LongestCommonSubsequenceDistance();
-        return score.apply(f1.getContent(), f2.getContent());
+        return score.apply("f1.getContent()", "f2.getContent()");
     }
 
+    @Deprecated
     private static Integer hammingDistance(File f1, File f2){
         HammingDistance score = new HammingDistance();
-        return score.apply(f1.getContent(), f2.getContent());
+        return score.apply("f1.getContent()", "f2.getContent()");
     }
 
+    @Deprecated
     private static Double cosineDistance(File f1, File f2){
         CosineDistance score = new CosineDistance();
-        return score.apply(f1.getContent(), f2.getContent());
+        return score.apply("f1.getContent()", "f2.getContent()");
     }
 
     private static Double cosineSimilarity(File f1, File f2){
@@ -92,18 +99,21 @@ public class ComparisonUtils {
         return null;
     }
 
+    @Deprecated
     private static Double jaroWinklerDistance(File f1, File f2){
         JaroWinklerDistance score = new JaroWinklerDistance();
-        return score.apply(f1.getContent(), f2.getContent());
+        return score.apply("f1.getContent()", "f2.getContent()");
     }
 
+    @Deprecated
     private static Double jaroWinklerSimilarity(File f1, File f2){
         JaroWinklerSimilarity score = new JaroWinklerSimilarity();
-        return score.apply(f1.getContent(), f2.getContent());
+        return score.apply("f1.getContent()", "f2.getContent()");
     }
 
+    @Deprecated
     private static Integer levenshteinDistance(File f1, File f2){
         LevenshteinDistance score = new LevenshteinDistance();
-        return score.apply(f1.getContent(), f2.getContent());
+        return score.apply("f1.getContent()", "f2.getContent()");
     }
 }

@@ -2,17 +2,15 @@ package com.project.similarity.db.entity;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Data
-@Table(name = "type")
-public class Type {
+@Table(name = "aufgabe")
+public class Aufgabe {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 

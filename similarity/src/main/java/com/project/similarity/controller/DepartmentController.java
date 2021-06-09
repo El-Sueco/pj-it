@@ -1,7 +1,7 @@
 package com.project.similarity.controller;
 
-import com.project.similarity.db.entity.Department;
-import com.project.similarity.db.service.DepartmentService;
+import com.project.similarity.db.entity.Aufgabe;
+import com.project.similarity.db.service.AufgabeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,11 +18,11 @@ import java.util.List;
 public class DepartmentController {
 
     @Autowired
-    DepartmentService departmentService;
+    AufgabeService departmentService;
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public ResponseEntity<List<Department>> getAll(){
-        List<Department> types = departmentService.getAll();
+    public ResponseEntity<List<Aufgabe>> getAll(){
+        List<Aufgabe> types = departmentService.getAll();
         return new ResponseEntity<>(types, HttpStatus.OK);
     }
 }

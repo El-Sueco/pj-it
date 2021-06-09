@@ -160,6 +160,27 @@ $(document).ready(function (e) {
             });
         });
 
+        $('#upload-zip-file-form').submit(function (event) {
+            event.preventDefault();
+            let form = document.getElementById('upload-zip-file-form');
+            let data = new FormData(form);
+
+            $.ajax({
+                url: "http://localhost:8080/files/upload-zip",
+                method: "post",
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (data, msg) {
+                    window.location.reload();
+                },
+                error: function (msg) {
+                    alert("an error occured");
+                    console.table(msg);
+                }
+            });
+        });
+
         $.ajax({
             url: "http://localhost:8080/types/all",
             method: "get",

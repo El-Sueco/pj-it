@@ -19,15 +19,15 @@
         <h3>Upload Area </h3>
         <form id="upload-file-form">
             <div class="form-group row">
-              <div class="col-md-6">
-                <label for="bezeichnung">Bezeichnung:</label>
-                <input id="bezeichnung" type="text" class="form-control" placeholder="Hier eintragen" name="name">
-              </div>
-              <div class="col-md-6">
-                <label for="type">Prozessmodell:</label>
-                <select id="type" class="form-control" name="type">
-                </select>
-              </div>
+                <div class="col-md-6">
+                    <label for="bezeichnung">Bezeichnung:</label>
+                    <input id="bezeichnung" type="text" class="form-control" placeholder="Hier eintragen" name="name">
+                </div>
+                <div class="col-md-6">
+                    <label for="type">Prozessmodell:</label>
+                    <select id="type" class="form-control" name="type">
+                    </select>
+                </div>
             </div>
             <div class="form-group mt-3">
                 <label for="file">Datei: </label>
@@ -36,6 +36,15 @@
                 <p class="help-block">Nur xml-Format zulässig!</p>
             </div>
             <input type="submit" id="submit" class="btn btn-primary" value="upload">
+        </form>
+
+        <form id="upload-zip-file-form" enctype="multipart/form-data">
+            <div class="form-group mt-3">
+                <label for="zip-file">Datei: </label>
+                <input id="zip-file" name="file" type="file" accept=".zip">
+                <p class="help-block">Nur zip-Format zulässig!</p>
+            </div>
+            <input type="submit" class="btn btn-primary" value="upload">
         </form>
 
     </div>
@@ -50,7 +59,7 @@
               <th>name</th>
               <th>file_name</th>
               <th>type</th>
-              <th>department</th>
+              <th>aufgabe</th>
             </tr>
           </thead>
         </table>
