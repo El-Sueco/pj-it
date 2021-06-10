@@ -42,22 +42,22 @@ public class FileController {
 
     @RequestMapping(value = "/upload-zip", method = RequestMethod.POST)
     public ResponseEntity<String> uploadZip(@RequestParam("file") MultipartFile file){
-        String message = "";
+        String message;
         try {
             filesStorageService.save(file);
 
             unzip(file.getOriginalFilename());
 
-            message = "Uploaded the file successfully: " + file.getOriginalFilename();
+            message = String.format("Uploaded the file successfully: %s", file.getOriginalFilename());
             return ResponseEntity.status(HttpStatus.OK).body(message);
         } catch (Exception e) {
-            message = "Could not upload the file: " + file.getOriginalFilename() + "!";
+            message = e.getMessage();
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(message);
         }
     }
 
 
-    public void unzip(String file) throws IOException {
+    private void unzip(String file) throws IOException {
         Aufgabe aufgabe = new Aufgabe();
         aufgabe.setName(file);
         aufgabeService.save(aufgabe);
@@ -97,7 +97,7 @@ public class FileController {
         zis.close();
     }
 
-    public java.io.File newFile(java.io.File destinationDir, ZipEntry zipEntry) throws IOException {
+    private java.io.File newFile(java.io.File destinationDir, ZipEntry zipEntry) throws IOException {
         java.io.File destFile = new java.io.File(destinationDir, zipEntry.getName());
 
         String destDirPath = destinationDir.getCanonicalPath();
