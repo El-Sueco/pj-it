@@ -7,6 +7,37 @@ $(document).ready(function (e) {
 
     if (path.startsWith("/check-more")) {
         $('.nav-link').filter(':contains("Ähnlichkeitsprüfung")').addClass("active");
+
+        $.ajax({
+            url: "/aufgabe/all",
+            method: "GET",
+            dataType: "json",
+            success: function (data, msg) {
+                var text = "";
+                text += "<option value='-1'>Select one</option>"
+                $.each(data, function(key, value) {
+                    text += "<option value='" + value.id + "'>" + value.name + "</option>"
+                })
+                $("#aufgabe").html(text);
+            }
+        });
+
+        $("#aufgabe").on("change", function (e) {
+            console.log(e);
+            console.log(this.value)
+            let data = {
+                "aufgabe": this.value
+            }
+            $.ajax({
+                url: "/files/all-by-aufgabe",
+                method: "POST",
+                dataType: "json",
+                data: data,
+                success: function (data, msg) {
+                    console.log(data);
+                }
+            });
+        })
     }
 
     if (path.startsWith("/manual")) {

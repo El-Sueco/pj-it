@@ -31,11 +31,11 @@ public class SimilarityController {
 
         //Number result = compareTwoModels(fileOne, fileTwo);
 
-        FileDiff resultDiff = showDiff(fileOne, fileTwo);
+        //FileDiff resultDiff = showDiff(fileOne, fileTwo);
 
         SuccessCheckTwoResponse response = new SuccessCheckTwoResponse();
         response.setSimilarity(0.0);
-        response.setFileDiff(resultDiff);
+        //response.setFileDiff(resultDiff);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.FileAlreadyExistsException;
@@ -61,6 +62,10 @@ public class FilesStorageService implements FilesStorageRepository {
     @Override
     public void deleteAll() {
         FileSystemUtils.deleteRecursively(root.toFile());
+    }
+
+    public void deleteZip(String zip) {
+        FileSystemUtils.deleteRecursively(Paths.get(root.toString() + "/" + zip).toFile());
     }
 
     @Override

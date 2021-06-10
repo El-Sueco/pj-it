@@ -1,5 +1,6 @@
 package com.project.similarity.db.service;
 
+import com.project.similarity.db.entity.Aufgabe;
 import com.project.similarity.db.entity.File;
 import com.project.similarity.db.repository.FileRepository;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,10 @@ public class FileService {
 
     public List<File> getAll() {
         return fileRepository.findAll();
+    }
+
+    public List<File> getAllByAufgabe(Aufgabe aufgabe) {
+        return fileRepository.getAllByAufgabe(aufgabe);
     }
 
     public File getById(Long id) {
