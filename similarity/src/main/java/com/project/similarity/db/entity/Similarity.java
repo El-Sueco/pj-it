@@ -22,6 +22,10 @@ public class Similarity {
     @JoinColumn(name="file2_id")
     private File file2;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="aufgabe_id")
+    private Aufgabe aufgabe;
+
     @Column(name = "score", nullable = false)
     private Double score;
 }

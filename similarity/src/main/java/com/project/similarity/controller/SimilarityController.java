@@ -1,20 +1,28 @@
 package com.project.similarity.controller;
 
+import com.project.similarity.controller.requests.AufgabeRequest;
 import com.project.similarity.controller.requests.CheckTwoRequest;
 import com.project.similarity.controller.response.PostResponse;
 import com.project.similarity.controller.response.SuccessCheckTwoResponse;
+import com.project.similarity.db.entity.Aufgabe;
 import com.project.similarity.db.entity.File;
+import com.project.similarity.db.entity.Similarity;
+import com.project.similarity.db.service.AufgabeService;
 import com.project.similarity.db.service.FileService;
+import com.project.similarity.db.service.SimilarityService;
 import com.project.similarity.utils.models.FileDiff;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.project.similarity.utils.ComparisonUtils.cosineSimilarity;
 import static com.project.similarity.utils.ComparisonUtils.showDiff;
 
 @RestController
@@ -23,19 +31,35 @@ public class SimilarityController {
 
     @Autowired
     private FileService fileService;
+    @Autowired
+    private AufgabeService aufgabeService;
+    @Autowired
+    private SimilarityService similarityService;
 
     @RequestMapping(value = "/check-two-models", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PostResponse> checkTwoModels(@RequestBody CheckTwoRequest request) {
-        File fileOne = fileService.getById(request.getFileOne());
-        File fileTwo = fileService.getById(request.getFileTwo());
+    public ResponseEntity<PostResponse> checkTwoModels(@RequestBody CheckTwoRequest request) throws IOException {
+        File fileOne = fileService.getById(4L);
+        File fileTwo = fileService.getById(5L);
 
-        //Number result = compareTwoModels(fileOne, fileTwo);
+        Number result = cosineSimilarity(Paths.get(fileOne.getPath()), Paths.get(fileTwo.getPath()));
 
-        //FileDiff resultDiff = showDiff(fileOne, fileTwo);
+        FileDiff resultDiff = showDiff(Paths.get(fileOne.getPath()), Paths.get(fileTwo.getPath()));
 
         SuccessCheckTwoResponse response = new SuccessCheckTwoResponse();
-        response.setSimilarity(0.0);
-        //response.setFileDiff(resultDiff);
+        response.setSimilarity(result);
+        response.setFileDiff(resultDiff);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/all-by-aufgabe/{id}", method = RequestMethod.GET)
+    public ResponseEntity<List<Similarity>> checkTwoModels(@PathVariable String id) {
+        List<Similarity> similarities;
+        try {
+            Aufgabe aufgabe = aufgabeService.getById(Long.valueOf(id));
+            similarities = similarityService.getByAufgabe(aufgabe);
+        } catch (Exception e) {
+            similarities = new ArrayList<>();
+        }
+        return new ResponseEntity<>(similarities, HttpStatus.OK);
     }
 }

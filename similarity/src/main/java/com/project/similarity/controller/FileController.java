@@ -49,20 +49,21 @@ public class FileController {
 
     @RequestMapping(value = "/all-by-aufgabe", method = RequestMethod.POST)
     public ResponseEntity<List<Similarity>> getAllByAufgabe(AufgabeRequest request) throws IOException {
-        Aufgabe aufgabe = aufgabeService.getById(request.getAufgabe());
+        Aufgabe aufgabe = aufgabeService.getById(Long.valueOf(request.getAufgabe()));
         List<File> files = fileService.getAllByAufgabe(aufgabe);
 
         List<Similarity> response = new ArrayList<>();
 
         for (File file : files) {
             for (File fileCompare : files) {
-                if(!file.getId().equals(fileCompare.getId())){
+                if(file.getId() < fileCompare.getId()){
                     Double score = cosineSimilarity(Paths.get(file.getPath()), Paths.get(fileCompare.getPath()));
                     log.info("f1: " + file.getName() + " with f2: " + fileCompare.getName() + " has score: " + score);
                     Similarity similarity = new Similarity();
                     similarity.setFile1(file);
                     similarity.setFile2(fileCompare);
                     similarity.setScore(score);
+                    similarity.setAufgabe(aufgabe);
                     similarity = similarityService.save(similarity);
 
                     response.add(similarity);

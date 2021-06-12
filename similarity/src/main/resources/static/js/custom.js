@@ -19,25 +19,76 @@ $(document).ready(function (e) {
                     text += "<option value='" + value.id + "'>" + value.name + "</option>"
                 })
                 $("#aufgabe").html(text);
+                $("#showAufgabe").html(text);
             }
         });
 
         $("#aufgabe").on("change", function (e) {
-            console.log(e);
-            console.log(this.value)
+            $('#checkModels').DataTable().clear().destroy();
+            let aufgabe = this.value;
             let data = {
-                "aufgabe": this.value
+                "aufgabe": aufgabe
             }
             $.ajax({
                 url: "/files/all-by-aufgabe",
                 method: "POST",
                 dataType: "json",
                 data: data,
+                async: true,
+                beforeSend: function() {
+                    $(".spanner").addClass("show");
+                    $(".overlay").addClass("show");
+                    $('#changeThreshold').prop("disabled", true);
+                    $('#aufgabe').prop("disabled", true);
+                    $('#showAufgabe').prop("disabled", true);
+                },
+                complete: function(){
+                    $(".spanner").removeClass("show");
+                    $(".overlay").removeClass("show");
+                    $('#changeThreshold').prop("disabled", false);
+                    $('#aufgabe').prop("disabled", false);
+                    $('#showAufgabe').prop("disabled", false);
+                },
                 success: function (data, msg) {
-                    console.log(data);
-                }
+                    recalcDatatable(aufgabe);
+                    $('#showAufgabe option[value="' + aufgabe + '"]').prop('selected', true)
+                    $('#aufgabe option[value="-1"]').prop('selected', true)
+                },
             });
+        });
+
+        $("#showAufgabe").on("change", function (e) {
+            recalcDatatable(this.value)
+        });
+
+        $('#changeThreshold').on("change", function(e){
+            recalcDatatable($("#showAufgabe").val())
         })
+
+        function recalcDatatable(select){
+            $('#checkModels').DataTable().clear().destroy();
+            if (select !== -1) {
+                $('#checkModels').DataTable({
+                    "sAjaxSource": "/similarity/all-by-aufgabe/" + select,
+                    "sAjaxDataProp": "",
+                    "createdRow": function( row, data, dataIndex ) {
+                        if (data["score"] >= $('#changeThreshold').val()) {
+                            $(row).addClass('highlight');
+                        }
+                    },
+                    "aaSorting": [[ 3, "desc" ]],
+                    "aoColumns": [
+                        {"mData": "id"},
+                        {"mData": "file1.name"},
+                        {"mData": "file2.name"},
+                        {"mData": "score"},
+                        {"mData": function() {
+                            return "<a id='showDifference'>Zeige</a>"
+                        }},
+                    ]
+                });
+            }
+        }
     }
 
     if (path.startsWith("/manual")) {
@@ -52,8 +103,6 @@ $(document).ready(function (e) {
             let fOne = $('#model-one option:selected').html();
             let fTwo = $('#model-two option:selected').html();
             let data = JSON.stringify({
-                "type": $('#types option:selected').val(),
-                "algo": $('#algos option:selected').val(),
                 "fileOne": $('#model-one option:selected').val(),
                 "fileTwo": $('#model-two option:selected').val()
             });
@@ -123,13 +172,17 @@ function showDiff(fOne, fTwo, diff) {
         let a = diff.fileOne[i];
         let b = diff.fileTwo[i];
         html += "<tr>";
-
-        if (a.toString() === b.toString()) {
-            html += "<td class='" + ("bg-warning text-white") + "'>" + a + "</td>";
-            html += "<td class='" + ("bg-warning text-white") + "'>" + b + "</td>";
-        }
-        else {
+        if(a.toString().includes("+++") || a.toString().includes("---")) {
+            html += "<td class='" + (a.toString().includes("+++") ? "bg-success" : "bg-danger text-white") + "'>" + a + "</td>";
+            //html += "<td class='" + (a.toString().includes("+++") ? "text-success" : "text-danger") + "'>" + a + "</td>";
+        } else {
             html += "<td>" + a + "</td>";
+        }
+        if(b.toString().includes("+++") || b.toString().includes("---")) {
+            html += "<td class='" + (b.toString().includes("+++") ? "bg-success" : "bg-danger text-white") + "'>" + b + "</td>";
+            //html += "<td class='" + (b.toString().includes("+++") ? "text-success" : "text-danger") + "'>" + b + "</td>";
+        } else {
+            html += "<td>" + b + "</td>";
         }
         html += "</tr>"
     }

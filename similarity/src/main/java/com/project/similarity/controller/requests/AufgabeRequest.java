@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class AufgabeRequest {
-    Long aufgabe;
+    String aufgabe;
 }

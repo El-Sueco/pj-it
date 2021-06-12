@@ -28,4 +28,8 @@ public class SimilarityService {
         }
         return similarityRepository.save(similarity);
     }
+
+    public List<Similarity> getByAufgabe(Aufgabe aufgabe){
+        return similarityRepository.getByAufgabe(aufgabe);
+    }
 }

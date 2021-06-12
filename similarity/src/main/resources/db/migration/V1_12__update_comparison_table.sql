@@ -1,0 +1,1 @@
+ALTER TABLE similarity ADD COLUMN aufgabe_id bigint(20) NOT NULL;

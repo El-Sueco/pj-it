@@ -22,8 +22,8 @@ public class AufgabeService {
         return list;
     }
 
-    public Aufgabe getById(Long departmentId) {
-        return aufgabeRepository.findById(departmentId).get();
+    public Aufgabe getById(Long aufgabeId) {
+        return aufgabeRepository.findById(aufgabeId).get();
     }
 
     public Aufgabe save(Aufgabe aufgabe) {
