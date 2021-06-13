@@ -62,4 +62,14 @@ public class SimilarityController {
         }
         return new ResponseEntity<>(similarities, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/show-difference/{id}", method = RequestMethod.GET)
+    public ResponseEntity<SuccessCheckTwoResponse> checkTwoModelsDiff(@PathVariable String id) throws IOException {
+        Similarity similarity = similarityService.getById(Long.valueOf(id));
+        FileDiff diff = showDiff(Paths.get(similarity.getFile1().getPath()), Paths.get(similarity.getFile2().getPath()));
+        SuccessCheckTwoResponse response = new SuccessCheckTwoResponse();
+        response.setFileDiff(diff);
+        response.setSimilarity(similarity.getScore());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

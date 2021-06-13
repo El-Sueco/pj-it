@@ -13,4 +13,5 @@ import java.util.Optional;
 public interface SimilarityRepository extends JpaRepository<Similarity, Long> {
     public Optional<Similarity> getByFile1AndFile2(File f1, File f2);
     public List<Similarity> getByAufgabe(Aufgabe aufgabe);
+    public Optional<Similarity> getById(Long id);
 }

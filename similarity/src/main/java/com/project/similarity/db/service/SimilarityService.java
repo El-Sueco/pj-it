@@ -32,4 +32,8 @@ public class SimilarityService {
     public List<Similarity> getByAufgabe(Aufgabe aufgabe){
         return similarityRepository.getByAufgabe(aufgabe);
     }
+
+    public Similarity getById(Long id){
+        return similarityRepository.getById(id).orElse(null);
+    }
 }

@@ -69,7 +69,7 @@ $(document).ready(function (e) {
             $('#checkModels').DataTable().clear().destroy();
             if (select !== -1) {
                 $('#checkModels').DataTable({
-                    "sAjaxSource": "/similarity/all-by-aufgabe/" + select,
+                    "ajax": "/similarity/all-by-aufgabe/" + select,
                     "sAjaxDataProp": "",
                     "createdRow": function( row, data, dataIndex ) {
                         if (data["score"] >= $('#changeThreshold').val()) {
@@ -77,18 +77,38 @@ $(document).ready(function (e) {
                         }
                     },
                     "aaSorting": [[ 3, "desc" ]],
-                    "aoColumns": [
-                        {"mData": "id"},
-                        {"mData": "file1.name"},
-                        {"mData": "file2.name"},
-                        {"mData": "score"},
-                        {"mData": function() {
-                            return "<a id='showDifference'>Zeige</a>"
-                        }},
+                    "columns": [
+                        {"data": "id"},
+                        {"data": "file1.name"},
+                        {"data": "file2.name"},
+                        {"data": "score"},
+                        {render: function(data, type, row){
+                                return '<button data-id="' + row["id"] +'" class="btn btn-link showDifference">Zeige</button>';
+                            }
+                        }
                     ]
                 });
             }
         }
+
+        $(document).on('click', '.showDifference', function(){
+            $('#differenceModal').modal('show');
+            $.ajax({
+                url: "/similarity/show-difference/" + this.dataset.id,
+                method: "GET",
+                dataType: "json",
+                success: function (data, msg) {
+                    console.log(data);
+                    var text = "";
+                    text += "<option value='-1'>Select one</option>"
+                    $.each(data, function(key, value) {
+                        text += "<option value='" + value.id + "'>" + value.name + "</option>"
+                    })
+                    $("#aufgabe").html(text);
+                    $("#showAufgabe").html(text);
+                }
+            });
+        });
     }
 
     if (path.startsWith("/manual")) {
