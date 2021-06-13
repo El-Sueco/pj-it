@@ -36,21 +36,6 @@ public class SimilarityController {
     @Autowired
     private SimilarityService similarityService;
 
-    @RequestMapping(value = "/check-two-models", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PostResponse> checkTwoModels(@RequestBody CheckTwoRequest request) throws IOException {
-        File fileOne = fileService.getById(4L);
-        File fileTwo = fileService.getById(5L);
-
-        Number result = cosineSimilarity(Paths.get(fileOne.getPath()), Paths.get(fileTwo.getPath()));
-
-        FileDiff resultDiff = showDiff(Paths.get(fileOne.getPath()), Paths.get(fileTwo.getPath()));
-
-        SuccessCheckTwoResponse response = new SuccessCheckTwoResponse();
-        response.setSimilarity(result);
-        response.setFileDiff(resultDiff);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
     @RequestMapping(value = "/all-by-aufgabe/{id}", method = RequestMethod.GET)
     public ResponseEntity<List<Similarity>> checkTwoModels(@PathVariable String id) {
         List<Similarity> similarities;

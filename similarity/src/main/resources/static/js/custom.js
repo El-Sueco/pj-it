@@ -83,7 +83,6 @@ $(document).ready(function (e) {
                         {"data": "file2.name"},
                         {"data": "score"},
                         {render: function(data, type, row){
-                                console.log(row);
                                 return '<button data-file1="' + row["file1"].name +'" data-file2="' + row["file2"].name +'" data-id="' + row["id"] +'" class="btn btn-light showDifference">Zeige</button>';
                             }
                         }
@@ -101,8 +100,10 @@ $(document).ready(function (e) {
                 method: "GET",
                 dataType: "json",
                 success: function (data, msg) {
-                    //buildChartJs(data.similarity);
-                    $(".modal-body").html(showDiff(file1, file2, data.fileDiff));
+                    let html = "<canvas id='chart1' width='7' height='1'/>";
+                    html += showDiff(file1, file2, data.fileDiff);
+                    $(".modal-body").html(html);
+                    buildChartJs(data.similarity)
                 },
                 error: function (msg) {
                     alert(msg["responseText"]);
@@ -155,39 +156,35 @@ $(document).ready(function (e) {
 });
 
 function showDiff(fOne, fTwo, diff) {
-    let html = "<thead><tr><th>" + fOne + "</th><th>" + fTwo + "</th></tr></thead><tbody>";
+    let html = "<table class='table'><thead><tr><th>" + fOne + "</th><th>" + fTwo + "</th></tr></thead><tbody>";
     for(let i = 0; i < diff.fileOne.length; i++) {
         let a = diff.fileOne[i];
         let b = diff.fileTwo[i];
         html += "<tr>";
-        if(a.toString().includes("+++") || a.toString().includes("---")) {
-            html += "<td class='" + (a.toString().includes("+++") ? "bg-success" : "bg-danger text-white") + "'>" + a + "</td>";
-            //html += "<td class='" + (a.toString().includes("+++") ? "text-success" : "text-danger") + "'>" + a + "</td>";
+        if(a.toString().includes("+++") || b.toString().includes("+++")) {
+            html += "<td>" + a.replaceAll("+++", "") + "</td><td>" + b.replaceAll("+++", "") + "</td>";
         } else {
-            html += "<td>" + a + "</td>";
-        }
-        if(b.toString().includes("+++") || b.toString().includes("---")) {
-            html += "<td class='" + (b.toString().includes("+++") ? "bg-success" : "bg-danger text-white") + "'>" + b + "</td>";
-            //html += "<td class='" + (b.toString().includes("+++") ? "text-success" : "text-danger") + "'>" + b + "</td>";
-        } else {
-            html += "<td>" + b + "</td>";
+            html += "<td class='bg-danger text-white'>" + a.replaceAll("+++", "") + "</td><td class='bg-danger text-white'>" + b.replaceAll("+++", "") + "</td>";
         }
         html += "</tr>"
     }
-    html += "</tbody>";
+    html += "</tbody></table>";
     return html;
 }
 
 function buildChartJs(value) {
     var ctx = document.getElementById('chart1').getContext('2d');
+    let color = 'rgba(0, 175, 0, 0.8)';
+    if (value >= $('#changeThreshold').val()) {
+        color = 'rgba(175, 0, 0, 0.8)';
+    }
     var myChart = new Chart(ctx, {
         type: 'horizontalBar',
         data: {
-
             datasets: [{
                 label: 'Ähnlichkeitsscore',
                 data: [value],
-                backgroundColor: 'rgba(50, 67, 251, 0.8)',
+                backgroundColor: color,
                 borderColor: 'black',
                 borderWidth: 1
             }]
@@ -196,11 +193,12 @@ function buildChartJs(value) {
             scales: {
                 xAxes: [{
                     ticks: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        min: 0,
+                        max: 100
                     }
                 }]
             }
         }
     });
-    $("#resultText").html("Der Algorithmus <b>" + $('#algos option:selected').html() + "</b> hat einen Score von <b>" + value + "</b> Punkten!");
 }

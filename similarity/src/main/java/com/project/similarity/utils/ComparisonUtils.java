@@ -25,7 +25,7 @@ public class ComparisonUtils {
         DiffRowGenerator generator = DiffRowGenerator.create()
                 .showInlineDiffs(true)
                 .inlineDiffByWord(true)
-                .oldTag(f -> "---")
+                .oldTag(f -> "+++")
                 .newTag(f -> "+++")
                 .build();
         List<DiffRow> rows = generator.generateDiffRows(
@@ -42,17 +42,10 @@ public class ComparisonUtils {
     }
 
     public static Double cosineSimilarity(Path f1, Path f2) throws IOException {
-        String f1Content = StringUtils.join(Files.readAllLines(f1, Charset.defaultCharset()), "");
-        String f2Content = StringUtils.join(Files.readAllLines(f2, Charset.defaultCharset()), "");
-        Map<CharSequence, Integer> leftVector = new HashMap<>();
-        Map<CharSequence, Integer> rightVector = new HashMap<>();
-        //leftVector.put(f1Content, f1Content.length());
-        //rightVector.put(f2Content, f2Content.length());
-        leftVector =  Files.readAllLines(f1, Charset.defaultCharset()).stream().distinct()
+        Map<CharSequence, Integer> leftVector = Files.readAllLines(f1, Charset.defaultCharset()).stream().distinct()
                 .collect(Collectors.toMap(Function.identity(), String::length));
-        rightVector =  Files.readAllLines(f2, Charset.defaultCharset()).stream().distinct()
+        Map<CharSequence, Integer> rightVector = Files.readAllLines(f2, Charset.defaultCharset()).stream().distinct()
                 .collect(Collectors.toMap(Function.identity(), String::length));
-
 
         CosineSimilarity score = new CosineSimilarity();
         return formatResult(score.cosineSimilarity(leftVector, rightVector));
