@@ -83,7 +83,8 @@ $(document).ready(function (e) {
                         {"data": "file2.name"},
                         {"data": "score"},
                         {render: function(data, type, row){
-                                return '<button data-id="' + row["id"] +'" class="btn btn-link showDifference">Zeige</button>';
+                                console.log(row);
+                                return '<button data-file1="' + row["file1"].name +'" data-file2="' + row["file2"].name +'" data-id="' + row["id"] +'" class="btn btn-light showDifference">Zeige</button>';
                             }
                         }
                     ]
@@ -93,52 +94,15 @@ $(document).ready(function (e) {
 
         $(document).on('click', '.showDifference', function(){
             $('#differenceModal').modal('show');
+            let file1 = this.dataset.file1;
+            let file2 = this.dataset.file2;
             $.ajax({
                 url: "/similarity/show-difference/" + this.dataset.id,
                 method: "GET",
                 dataType: "json",
                 success: function (data, msg) {
-                    console.log(data);
-                    var text = "";
-                    text += "<option value='-1'>Select one</option>"
-                    $.each(data, function(key, value) {
-                        text += "<option value='" + value.id + "'>" + value.name + "</option>"
-                    })
-                    $("#aufgabe").html(text);
-                    $("#showAufgabe").html(text);
-                }
-            });
-        });
-    }
-
-    if (path.startsWith("/manual")) {
-        $('.nav-link').filter(':contains("Anleitung")').addClass("active");
-    }
-
-    if (path.startsWith("/check-two")) {
-        $('.nav-link').filter(':contains("Ähnlichkeitsprüfung")').addClass("active");
-
-        $('#check-two-models-form').submit(function (event) {
-            event.preventDefault();
-            let fOne = $('#model-one option:selected').html();
-            let fTwo = $('#model-two option:selected').html();
-            let data = JSON.stringify({
-                "fileOne": $('#model-one option:selected').val(),
-                "fileTwo": $('#model-two option:selected').val()
-            });
-            $.ajax({
-                url: "/similarity/check-two-models",
-                method: "post",
-                dataType: "json",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                data: data,
-                success: function (data, msg) {
-                    buildChartJs(data.similarity);
-                    showDiff(fOne, fTwo, data.fileDiff);
-                    $('.container').removeClass('invisible');
+                    //buildChartJs(data.similarity);
+                    $(".modal-body").html(showDiff(file1, file2, data.fileDiff));
                 },
                 error: function (msg) {
                     alert(msg["responseText"]);
@@ -146,6 +110,10 @@ $(document).ready(function (e) {
                 }
             });
         });
+    }
+
+    if (path.startsWith("/manual")) {
+        $('.nav-link').filter(':contains("Anleitung")').addClass("active");
     }
 
     if (path.startsWith("/database")) {
@@ -207,7 +175,7 @@ function showDiff(fOne, fTwo, diff) {
         html += "</tr>"
     }
     html += "</tbody>";
-    $("#result-diff").html(html);
+    return html;
 }
 
 function buildChartJs(value) {
