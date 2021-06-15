@@ -1,0 +1,5 @@
+ALTER TABLE aufgabe ADD CONSTRAINT unique_zip_name UNIQUE (zip_name);
+ALTER TABLE file ADD FOREIGN KEY (aufgabe_id) REFERENCES aufgabe (id) ON DELETE CASCADE;
+ALTER TABLE similarity ADD FOREIGN KEY (aufgabe_id) REFERENCES aufgabe (id) ON DELETE CASCADE;
+ALTER TABLE similarity ADD FOREIGN KEY (file1_id) REFERENCES file (id) ON DELETE CASCADE;
+ALTER TABLE similarity ADD FOREIGN KEY (file2_id) REFERENCES file (id) ON DELETE CASCADE;

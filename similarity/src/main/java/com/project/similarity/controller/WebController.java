@@ -17,11 +17,6 @@ public class WebController {
         return "database";
     }
 
-    @RequestMapping(path="/check-two", method=RequestMethod.GET)
-    public String checkTwo(){
-        return "check2";
-    }
-
     @RequestMapping(path="/check-more", method=RequestMethod.GET)
     public String checkMore(){
         return "check-more";

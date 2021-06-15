@@ -8,20 +8,24 @@ $(document).ready(function (e) {
     if (path.startsWith("/check-more")) {
         $('.nav-link').filter(':contains("Ähnlichkeitsprüfung")').addClass("active");
 
-        $.ajax({
-            url: "/aufgabe/all",
-            method: "GET",
-            dataType: "json",
-            success: function (data, msg) {
-                var text = "";
-                text += "<option value='-1'>Select one</option>"
-                $.each(data, function(key, value) {
-                    text += "<option value='" + value.id + "'>" + value.name + "</option>"
-                })
-                $("#aufgabe").html(text);
-                $("#showAufgabe").html(text);
-            }
-        });
+        function ajaxAufgabe(){
+            $.ajax({
+                url: "/aufgabe/all",
+                method: "GET",
+                dataType: "json",
+                success: function (data, msg) {
+                    var text = "";
+                    text += "<option value='-1'>Select one</option>"
+                    $.each(data, function(key, value) {
+                        text += "<option value='" + value.id + "'>" + value.name + "</option>"
+                    })
+                    $("#aufgabe").html(text);
+                    $("#showAufgabe").html(text);
+                }
+            });
+        }
+
+        ajaxAufgabe();
 
         $("#aufgabe").on("change", function (e) {
             $('#checkModels').DataTable().clear().destroy();
@@ -53,6 +57,11 @@ $(document).ready(function (e) {
                     recalcDatatable(aufgabe);
                     $('#showAufgabe option[value="' + aufgabe + '"]').prop('selected', true)
                     $('#aufgabe option[value="-1"]').prop('selected', true)
+                },
+                error: function(data, msg) {
+                    alert("Es ist ein Fehler aufgetreten, bitte erneut Operation ausführen." +
+                        "\nSollte dies nicht möglich sein, muss die Aufgabe manuell neu hochgeladen werden.");
+                    ajaxAufgabe();
                 },
             });
         });

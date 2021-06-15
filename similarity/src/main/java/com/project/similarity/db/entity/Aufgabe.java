@@ -19,4 +19,7 @@ public class Aufgabe {
 
     @Column(name = "path", nullable = false)
     private String path;
+
+    @Column(name = "zip_name", nullable = false)
+    private String zipName;
 }

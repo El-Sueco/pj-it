@@ -6,6 +6,7 @@ import com.project.similarity.db.repository.FileRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FileService {
@@ -28,7 +29,17 @@ public class FileService {
         return fileRepository.findById(id).get();
     }
 
+    public File getByNameAndAufgabe(String name, Aufgabe aufgabe) {
+        return fileRepository.getByNameAndAufgabe(name, aufgabe).orElse(new File());
+    }
+
     public File save(File file){
+        Optional<File> optional = fileRepository.getByNameAndAufgabe(file.getName(), file.getAufgabe());
+        if(optional.isPresent()) {
+            file = optional.get();
+            file.setPath(file.getPath());
+        }
         return fileRepository.save(file);
     }
+
 }
