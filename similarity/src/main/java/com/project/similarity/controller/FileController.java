@@ -70,6 +70,13 @@ public class FileController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/delete-all-by-aufgabe/{id}", method = RequestMethod.GET)
+    public ResponseEntity<Boolean> deleteAllByAufgabe(@PathVariable("id") String id) {
+        Aufgabe aufgabe = aufgabeService.getById(Long.valueOf(id));
+        aufgabeService.delete(aufgabe);
+        return new ResponseEntity<>(true, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/upload-zip", method = RequestMethod.POST)
     public ResponseEntity<String> uploadZip(@RequestParam("file") MultipartFile file){
         String message;

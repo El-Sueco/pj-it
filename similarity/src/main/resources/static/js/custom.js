@@ -1,8 +1,71 @@
 $(document).ready(function (e) {
     let path = window.location.pathname;
 
-    if (path.endsWith("/")) {
-        $('.nav-link').filter(':contains("Über")').addClass("active");
+    if (path.endsWith("/") || path.startsWith("/database")) {
+        $('.nav-link').filter(':contains("Datenbank")').addClass("active");
+
+        $.ajax({
+            url: "/aufgabe/all",
+            method: "GET",
+            dataType: "json",
+            success: function (data, msg) {
+                var text = "";
+                text += "<option value='-1'>Select one</option>"
+                $.each(data, function(key, value) {
+                    text += "<option value='" + value.id + "'>" + value.name + "</option>"
+                })
+                $("#deleteAufgabe").html(text);
+            }
+        });
+
+        $('#upload-zip-file-form').submit(function (event) {
+            event.preventDefault();
+            let form = document.getElementById('upload-zip-file-form');
+            let data = new FormData(form);
+
+            $.ajax({
+                url: "/files/upload-zip",
+                method: "post",
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (data, msg) {
+                    window.location.reload();
+                },
+                error: function (msg) {
+                    alert(msg["responseText"]);
+                    console.table(msg);
+                }
+            });
+        });
+
+
+        $("#deleteAufgabe").on("change", function (e) {
+            $.ajax({
+                url: "/files/delete-all-by-aufgabe/" + this.value,
+                method: "GET",
+                dataType: "json",
+                success: function (data, msg) {
+                    return window.location.reload();
+                },
+                error: function (msg) {
+                    alert(msg["responseText"]);
+                    console.table(msg);
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            var table = $('#models').DataTable({
+                "sAjaxSource": "/files/all",
+                "sAjaxDataProp": "",
+                "aoColumns": [
+                    {"mData": "id"},
+                    {"mData": "name"},
+                    {"mData": "aufgabe.name"}
+                ]
+            })
+        });
     }
 
     if (path.startsWith("/check-more")) {
@@ -124,43 +187,6 @@ $(document).ready(function (e) {
 
     if (path.startsWith("/manual")) {
         $('.nav-link').filter(':contains("Anleitung")').addClass("active");
-    }
-
-    if (path.startsWith("/database")) {
-        $('.nav-link').filter(':contains("Datenbank")').addClass("active");
-
-        $('#upload-zip-file-form').submit(function (event) {
-            event.preventDefault();
-            let form = document.getElementById('upload-zip-file-form');
-            let data = new FormData(form);
-
-            $.ajax({
-                url: "/files/upload-zip",
-                method: "post",
-                data: data,
-                contentType: false,
-                processData: false,
-                success: function (data, msg) {
-                    window.location.reload();
-                },
-                error: function (msg) {
-                    alert(msg["responseText"]);
-                    console.table(msg);
-                }
-            });
-        });
-
-        $(document).ready(function () {
-            var table = $('#models').DataTable({
-                "sAjaxSource": "/files/all",
-                "sAjaxDataProp": "",
-                "aoColumns": [
-                    {"mData": "id"},
-                    {"mData": "name"},
-                    {"mData": "aufgabe.name"}
-                ]
-            })
-        });
     }
 });
 

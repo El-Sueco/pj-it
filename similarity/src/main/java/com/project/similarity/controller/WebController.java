@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class WebController {
 
     @RequestMapping(path="/", method=RequestMethod.GET)
-    public String about(){
-        return "about";
+    public String index(){
+        return database();
     }
 
     @RequestMapping(path="/database", method=RequestMethod.GET)
