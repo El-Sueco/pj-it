@@ -6,24 +6,53 @@
 </head>
 
 <body>
-    <div th:replace="fragments :: navbar"/>
+<div th:replace="fragments :: navbar"/>
 
-    <!-- Content -->
-    <div class="container">
-        <h1 class="page-header">Anleitung</h1>
-        <hr>
-            <h5>Hochladen eines Modells in die Datenbank</h5>
-            <p>hier steht eine Anleitung...</p>
+<!-- Content -->
+<div class="container">
+    <h1 class="page-header">Anleitung</h1>
+    <hr>
+    <h5>Hochladen eines Modells in die Datenbank</h5>
+    <ul>
+        <li>Erlaubte Formate:
+            <br>.zip
+        </li>
+        <li>Dateistruktur innerhalb des .zip:
+            <br>root/{Aufgabename}/{FilesDerStudis.something}
+        </li>
+        <li>Constraints:
+            <br>zulässig ist nur eine Aufgabe pro .zip
+            <br>Subordner im Aufgabeordner können im Einzelfall funktionieren, werden aber generell nicht supported
+        </li>
+    </ul>
+    <ol>
+        <li>Aufruf /database</li>
+        <li>.zip auswählen</li>
+        <li>"upload" klicken</li>
+    </ol>
 
-            <h5>Ähnlichkeitsprüfung</h5>
-            <p>hier steht eine Anleitung...</p>
-    </div>
-
+    <h5>Ähnlichkeitsprüfung</h5>
+    <ul>
+        <li>Threshold:
+            <br>Wahl des Thresholds, ab welchem Ähnlichkeitswert der Vergleich in der Datatable markiert werden soll.
+        </li>
+        <li>Zeige:
+            <br>Side-by-Side-Diff wird angezeigt.
+        </li>
+    </ul>
+    <ol>
+        <li>(optional) "Aufgabe berechnen" mit Auswahl der Aufgabe</li>
+        <li>"Aufgabe auswählen" mit Auswahl der Aufgabe</li>
+        <li>Similarity wird (neu) berechnet ausgegeben</li>
+    </ol>
 </div>
+
 <hr>
 
 <!-- script necessary for bootstrap functions -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="js/custom.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="js/custom.js"></script>
 </body>
 </html>
