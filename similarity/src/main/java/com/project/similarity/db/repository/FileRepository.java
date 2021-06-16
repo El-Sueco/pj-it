@@ -10,6 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface FileRepository extends JpaRepository<File, Long> {
-    public List<File> getAllByAufgabe(Aufgabe aufgabe);
+    public List<File> getAllByAufgabeOrderByIdAsc(Aufgabe aufgabe);
     public Optional<File> getByNameAndAufgabe(String name, Aufgabe aufgabe);
 }

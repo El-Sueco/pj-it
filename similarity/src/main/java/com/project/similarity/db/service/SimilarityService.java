@@ -1,9 +1,7 @@
 package com.project.similarity.db.service;
 
 import com.project.similarity.db.entity.Aufgabe;
-import com.project.similarity.db.entity.File;
 import com.project.similarity.db.entity.Similarity;
-import com.project.similarity.db.repository.FileRepository;
 import com.project.similarity.db.repository.SimilarityRepository;
 import org.springframework.stereotype.Service;
 

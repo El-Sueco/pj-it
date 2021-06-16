@@ -126,7 +126,7 @@ public class FilesStorageService implements FilesStorageRepository {
         while (zipEntry != null) {
             java.io.File newFile = newFile(destDir, zipEntry);
             if (zipEntry.isDirectory()) {
-                aufgabe = aufgabeService.getByName(newFile.getName());
+                aufgabe = aufgabeService.getByNameAndZipName(newFile.getName(), file);
                 aufgabe.setName(newFile.getName());
                 aufgabe.setPath(newFile.getPath());
                 aufgabe.setZipName(file);

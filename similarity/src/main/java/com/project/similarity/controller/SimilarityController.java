@@ -1,11 +1,7 @@
 package com.project.similarity.controller;
 
-import com.project.similarity.controller.requests.AufgabeRequest;
-import com.project.similarity.controller.requests.CheckTwoRequest;
-import com.project.similarity.controller.response.PostResponse;
 import com.project.similarity.controller.response.SuccessCheckTwoResponse;
 import com.project.similarity.db.entity.Aufgabe;
-import com.project.similarity.db.entity.File;
 import com.project.similarity.db.entity.Similarity;
 import com.project.similarity.db.service.AufgabeService;
 import com.project.similarity.db.service.FileService;
@@ -13,16 +9,17 @@ import com.project.similarity.db.service.SimilarityService;
 import com.project.similarity.utils.models.FileDiff;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.project.similarity.utils.ComparisonUtils.cosineSimilarity;
 import static com.project.similarity.utils.ComparisonUtils.showDiff;
 
 @RestController

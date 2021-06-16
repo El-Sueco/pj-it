@@ -28,12 +28,12 @@ public class AufgabeService {
         return aufgabeRepository.findById(aufgabeId).get();
     }
 
-    public Aufgabe getByName(String name) {
-        return aufgabeRepository.getByName(name).orElse(new Aufgabe());
+    public Aufgabe getByNameAndZipName(String name, String zipName) {
+        return aufgabeRepository.getByNameAndZipName(name, zipName).orElse(new Aufgabe());
     }
 
     public Aufgabe save(Aufgabe aufgabe) {
-        Optional<Aufgabe> optional = aufgabeRepository.getByName(aufgabe.getName());
+        Optional<Aufgabe> optional = aufgabeRepository.getByNameAndZipName(aufgabe.getName(), aufgabe.getZipName());
         if(optional.isPresent()) {
             aufgabe = optional.get();
             aufgabe.setPath(aufgabe.getPath());

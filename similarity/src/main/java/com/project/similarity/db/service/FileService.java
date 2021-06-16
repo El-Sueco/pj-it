@@ -22,7 +22,7 @@ public class FileService {
     }
 
     public List<File> getAllByAufgabe(Aufgabe aufgabe) {
-        return fileRepository.getAllByAufgabe(aufgabe);
+        return fileRepository.getAllByAufgabeOrderByIdAsc(aufgabe);
     }
 
     public File getById(Long id) {

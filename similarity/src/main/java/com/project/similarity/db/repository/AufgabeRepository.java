@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface AufgabeRepository extends JpaRepository<Aufgabe, Long> {
-    public Optional<Aufgabe> getByName(String name);
+    public Optional<Aufgabe> getByNameAndZipName(String name, String zipName);
     public Optional<Aufgabe> getByZipName(String name);
 }
